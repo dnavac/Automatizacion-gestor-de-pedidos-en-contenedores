@@ -1,0 +1,1122 @@
+{
+  "name": "mariano",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1CkA13rDIjVgFffkamx6PPbhHsMDXr6zVzjiIEboVAbQ",
+          "mode": "list",
+          "cachedResultName": "Respuesta Contenedores",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CkA13rDIjVgFffkamx6PPbhHsMDXr6zVzjiIEboVAbQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2147444762,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CkA13rDIjVgFffkamx6PPbhHsMDXr6zVzjiIEboVAbQ/edit#gid=2147444762"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dc628ea8-7b2a-488a-9615-b7c0630ea193",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "hA8PIJYZGEpOFH7C",
+          "name": "owenSheet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "=numPedido_{{ $('Google Sheets Trigger').item.json['Ingrese el número del pedido'] }}",
+        "filter": {},
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1072,
+        272
+      ],
+      "id": "388aeab6-f834-461e-aa2c-719201bb1621",
+      "name": "Buscar el numPedido1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=numContenedor_{{ $('Google Sheets Trigger').item.json['Ingrese el numero del contenedor'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1b-PB05SGtlZqAOyHGc9HdmmMpqsIfvRv",
+          "mode": "list",
+          "cachedResultName": "contenedores",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1b-PB05SGtlZqAOyHGc9HdmmMpqsIfvRv"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1056,
+        -288
+      ],
+      "id": "442db8a1-3ab5-4853-940a-0a8728ad9cc1",
+      "name": "Crear carpeta con numContenedor",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "=numContenedor_{{ $json['Ingrese el numero del contenedor'] }}",
+        "returnAll": true,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        464,
+        0
+      ],
+      "id": "b9260627-8bb5-4e1d-8fe9-f60b0222ab75",
+      "name": "Buscar la carpeta con el numContenedor",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bdfe8fd8-8055-4dfe-a528-c828815cb90c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "1cbf627b-588e-47ba-896e-3dd081a66ee4",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1296,
+        272
+      ],
+      "id": "fa6d54e6-1d91-45d4-9186-a8cc3bce87ce",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=data",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Crear carpeta con el numPedido').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2144,
+        -288
+      ],
+      "id": "273b74b5-9733-4767-8b98-fb6e4a26f76b",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.fotoId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1952,
+        -288
+      ],
+      "id": "93e1cf22-ccde-4f2f-b62d-2f94b467f147",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=numPedido_{{ $('Google Sheets Trigger').item.json['Ingrese el número del pedido'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Crear carpeta con numContenedor').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1296,
+        -288
+      ],
+      "id": "a7f23f52-342c-49d3-8cd1-6ff4582fc0ab",
+      "name": "Crear carpeta con el numPedido",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=numPedido_{{ $('Google Sheets Trigger').item.json['Ingrese el número del pedido'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Buscar la carpeta con el numContenedor').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1712,
+        -16
+      ],
+      "id": "628fd52f-ec2f-46b1-89d2-14bf64b4259c",
+      "name": "Crear carpeta con el numPedido1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const fotosString = $('Google Sheets Trigger').first().json['Cargue las imagenes'];\nif (fotosString) {\n  const enlaces = fotosString.split(\",\");\n  return enlaces.map((url) => {\n    const id = url.trim().split(\"id=\")[1];\n    return { json: { fotoId: id } };\n  });\n} else {\n  return [];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        -16
+      ],
+      "id": "d36f71bc-4a2c-4164-bab4-91c6299dc5e5",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=data",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Crear carpeta con el numPedido').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2624,
+        -16
+      ],
+      "id": "baa07ba3-ba00-4630-a900-e5a943c20a11",
+      "name": "Upload file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.fotoId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2416,
+        -16
+      ],
+      "id": "9153e937-a0eb-4eb9-bf46-768cc9d507d1",
+      "name": "Download file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const fotosString = $('Google Sheets Trigger').first().json['Cargue las imagenes'];\nif (fotosString) {\n  const enlaces = fotosString.split(\",\");\n  return enlaces.map((url) => {\n    const id = url.trim().split(\"id=\")[1];\n    return { json: { fotoId: id } };\n  });\n} else {\n  return [];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        448
+      ],
+      "id": "56fd4e9f-0625-4747-8002-90ae09b19e10",
+      "name": "Code in JavaScript2",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=data",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Buscar el numPedido1').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2160,
+        448
+      ],
+      "id": "9c923a31-9e22-454e-a9cd-4415b759ffaa",
+      "name": "Upload file2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.fotoId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1952,
+        448
+      ],
+      "id": "03df9e9e-0d1c-43d7-9693-eb73980d254e",
+      "name": "Download file2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4Ksii9IlxbY9Iqpg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c2f2db65-8dec-4402-ae0e-a32d5a302e10",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "6b2cd480-3513-46f8-b336-4ecaf94ff70d",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        704,
+        0
+      ],
+      "id": "4053dc0e-d54b-4913-bbb2-2c214243116a",
+      "name": "Si no existe la carpeta con el numContenedor"
+    },
+    {
+      "parameters": {
+        "jsCode": "const fotosString = $('Google Sheets Trigger').first().json['Cargue las imagenes'];\nif (fotosString) {\n  const enlaces = fotosString.split(\",\");\n  return enlaces.map((url) => {\n    const id = url.trim().split(\"id=\")[1];\n    return { json: { fotoId: id } };\n  });\n} else {\n  return [];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        -288
+      ],
+      "id": "dad63252-9a0d-41cc-9294-0425698b1f26",
+      "name": "Se separan las fotos",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "sendTo": "Diegonava1023@gmail.com",
+        "subject": "Hola Jefe, hay un nuevo pedido para revisar",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Nuevo pedido para revisión</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color:#f4f6f8; padding:20px;\">\n  <div style=\"max-width:600px; margin:auto; background:#ffffff; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);\">\n    \n    <h2 style=\"color:#333;\">Nuevo pedido para revisión</h2>\n    \n    <p>Hola Jefe,</p>\n    <p>Hay un nuevo pedido pendiente por revisar con la siguiente información:</p>\n    \n    <table style=\"width:100%; border-collapse:collapse; margin-top:15px;\">\n      <tr>\n        <td style=\"padding:8px; font-weight:bold;\">Contenedor:</td>\n        <td style=\"padding:8px;\">{{ $('Google Sheets Trigger').item.json['Ingrese el numero del contenedor'] }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding:8px; font-weight:bold;\">Pedido:</td>\n        <td style=\"padding:8px;\">{{ $('Google Sheets Trigger').item.json['Ingrese el número del pedido'] }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding:8px; font-weight:bold;\">Fotos:</td>\n        <td style=\"padding:8px;\">\n          <a href=\"{{ $json.data.LinkCarpeta }}\" target=\"_blank\">\n            Ver imágenes\n          </a>\n        </td>\n      </tr>\n    </table>\n\n    <div style=\"margin-top:25px; text-align:center;\">\n      \n      <a href=\"https://owen2310.app.n8n.cloud/webhook-test/1661284a-c7c9-4ee8-b1cb-e6e1d05ea0f0?Marca%20temporal={{ encodeURIComponent($('Google Sheets Trigger').item.json['Marca temporal']) }}&link={{ $json.data.LinkCarpeta }}\"\n   style=\"background:#dc3545; color:#fff; padding:12px 20px; text-decoration:none; border-radius:5px;\">\n   Rechazar\n</a>\n      <a href=\"https://owen2310.app.n8n.cloud/form-test/88e525ad-e8bd-4613-8caf-c5d292bf4631?Marca%20temporal={{ encodeURIComponent($('Google Sheets Trigger').item.json['Marca temporal']) }}&link={{ $json.data.LinkCarpeta }}\"\n   style=\"background:#28a745; color:#fff; padding:12px 20px; text-decoration:none; border-radius:5px; margin-right:10px;\">\n   Aceptar\n</a>\n    </div>\n\n    <p style=\"margin-top:30px; font-size:12px; color:#777;\">\n      Este mensaje fue generado automáticamente desde n8n.\n    </p>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3568,
+        -16
+      ],
+      "id": "ee4a2521-ff88-45d6-a77f-ba20f030ebc3",
+      "name": "Send a message",
+      "webhookId": "d50559e3-e858-4d7c-9452-02cbf2d13c91",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Tg3MqvELPJFROmae",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2368,
+        448
+      ],
+      "id": "1624e735-19f2-44a2-9e6b-5811d879cde0",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2896,
+        -16
+      ],
+      "id": "2a0f143f-56f5-4313-9c0e-126f8c0b0410",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        -288
+      ],
+      "id": "1faaa7b5-ce94-48ee-9bb7-5f5fdfddb871",
+      "name": "Aggregate2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"data\": {\n    \"contenedor\": \"{{ $('Google Sheets Trigger').item.json['Ingrese el numero del contenedor'] }}\",\n    \"pedido\": \"{{ $('Google Sheets Trigger').item.json['Ingrese el número del pedido'] }}\",\n    \"LinkCarpeta\": {{ $json.data[0].webViewLink }}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2640,
+        -288
+      ],
+      "id": "fdeba432-67c8-499b-8352-8879ef5ed073",
+      "name": "Edit Node1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"data\": {\n    \"contenedor\": \"{{ $('Google Sheets Trigger').item.json['Ingrese el numero del contenedor'] }}\",\n    \"pedido\": \"{{ $('Google Sheets Trigger').item.json['Ingrese el número del pedido'] }}\",\n    \"LinkCarpeta\": \"{{ $('Buscar el numPedido1').item.json.webViewLink }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3088,
+        -16
+      ],
+      "id": "ad5c6d45-615e-4272-ba1c-b481bb8f8f17",
+      "name": "Edit Node2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"data\": {\n    \"contenedor\": \"{{ $('Google Sheets Trigger').item.json['Ingrese el numero del contenedor'] }}\",\n    \"pedido\": \"{{ $('Google Sheets Trigger').item.json['Ingrese el número del pedido'] }}\",\n    \"LinkCarpeta\": \"{{ $('Buscar el numPedido1').item.json.webViewLink }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2592,
+        448
+      ],
+      "id": "eb741960-ec48-4d64-83fc-4781773cddb4",
+      "name": "Edit Node3"
+    },
+    {
+      "parameters": {
+        "path": "1661284a-c7c9-4ee8-b1cb-e6e1d05ea0f0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        448
+      ],
+      "id": "6820d2f9-0f26-4b9c-93c4-563fe8eef84f",
+      "name": "Webhook Rechazar",
+      "webhookId": "1661284a-c7c9-4ee8-b1cb-e6e1d05ea0f0"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json['Correo electronico'] }}",
+        "subject": "=Hola  {{ $('On form submission').item.json['Nombre y apellido del cliente'] }} tienes un nuevo pedido pendiente por revisar",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Información de su pedido</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color:#f4f6f8; padding:20px;\">\n  <div style=\"max-width:600px; margin:auto; background:#ffffff; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);\">\n    \n    <h2 style=\"color:#333;\">Detalles de su Pedido</h2>\n    \n    <p>Estimado cliente,</p>\n    <p>Le informamos que los detalles y registros fotográficos de su pedido ya están disponibles para su revisión:</p>\n    \n    <table style=\"width:100%; border-collapse:collapse; margin-top:15px; border: 1px solid #eee;\">\n      <tr style=\"background-color: #f9f9f9;\">\n        <td style=\"padding:10px; font-weight:bold; border-bottom: 1px solid #eee;\">Número de Contenedor:</td>\n        <td style=\"padding:10px; border-bottom: 1px solid #eee;\">{{ $json['Ingrese el numero del contenedor'] }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding:10px; font-weight:bold; border-bottom: 1px solid #eee;\">Número de Pedido:</td>\n        <td style=\"padding:10px; border-bottom: 1px solid #eee;\">{{ $json['Ingrese el número del pedido'] }}</td>\n      </tr>\n      <tr style=\"background-color: #f9f9f9;\">\n        <td style=\"padding:10px; font-weight:bold;\">Registro Fotográfico:</td>\n        <td style=\"padding:10px;\">\n          <a href=\"{{ $('On form submission').item.json.formQueryParameters.link }}\" target=\"_blank\" style=\"color:#007bff; text-decoration:none; font-weight:bold;\">\n            Acceder a la carpeta de imágenes →\n          </a>\n        </td>\n      </tr>\n    </table>\n\n    <div style=\"margin-top:25px; padding: 15px; background-color: #e9ecef; border-radius: 5px;\">\n      <p style=\"margin:0; font-size:14px; color:#555;\">\n        <strong>Nota:</strong> Al hacer clic en el enlace superior, podrá visualizar todas las imágenes cargadas. Si tiene alguna duda, por favor contáctenos.\n      </p>\n    </div>\n\n    <p style=\"margin-top:30px; font-size:12px; color:#999; text-align:center;\">\n      Gracias por su confianza. <br>\n      Este es un mensaje automático generado desde n8n.\n    </p>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        800
+      ],
+      "id": "a9d3f9de-2df5-450a-ae25-53470e614502",
+      "name": "Send a message1",
+      "webhookId": "d50559e3-e858-4d7c-9452-02cbf2d13c91",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Tg3MqvELPJFROmae",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1CkA13rDIjVgFffkamx6PPbhHsMDXr6zVzjiIEboVAbQ",
+          "mode": "list",
+          "cachedResultName": "Respuesta Contenedores",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CkA13rDIjVgFffkamx6PPbhHsMDXr6zVzjiIEboVAbQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2147444762,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CkA13rDIjVgFffkamx6PPbhHsMDXr6zVzjiIEboVAbQ/edit#gid=2147444762"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Marca temporal",
+              "lookupValue": "={{ $json.query['Marca temporal'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        272,
+        448
+      ],
+      "id": "a3f6b701-0eb2-41a1-bf8e-d4f96658b598",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hAB1yiDMd30NUTTG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Dirección de correo electrónico'] }}",
+        "subject": "Pedido devuelto",
+        "message": "=Hola, tú pedido con número {{ $json['Ingrese el número del pedido'] }} del contenedor {{ $json['Ingrese el numero del contenedor'] }} fue devuelo. Por favor revisalo y actualizalo\nlink de carpeta: {{ $('Webhook Rechazar').item.json.query.link }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        448
+      ],
+      "id": "0218bacc-2d02-4e56-88f5-9f8555f6acc4",
+      "name": "Send a message2",
+      "webhookId": "cff3b1b5-beef-475e-9c80-5d0171de51a1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Tg3MqvELPJFROmae",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1CkA13rDIjVgFffkamx6PPbhHsMDXr6zVzjiIEboVAbQ",
+          "mode": "list",
+          "cachedResultName": "Respuesta Contenedores",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CkA13rDIjVgFffkamx6PPbhHsMDXr6zVzjiIEboVAbQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2147444762,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CkA13rDIjVgFffkamx6PPbhHsMDXr6zVzjiIEboVAbQ/edit#gid=2147444762"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Marca temporal",
+              "lookupValue": "={{ $json.formQueryParameters['Marca temporal'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        800
+      ],
+      "id": "b6d7dd45-3d15-4466-b78a-c3bf3c860878",
+      "name": "Get row(s) in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hAB1yiDMd30NUTTG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Enviar al cliente final",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre y apellido del cliente"
+            },
+            {
+              "fieldLabel": "Correo electronico",
+              "fieldType": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        16,
+        800
+      ],
+      "id": "d15fe5c6-217f-4c0a-9e9b-4afca7bb3487",
+      "name": "On form submission",
+      "webhookId": "88e525ad-e8bd-4613-8caf-c5d292bf4631"
+    }
+  ],
+  "pinData": {
+    "Google Sheets Trigger": [
+      {
+        "json": {
+          "Marca temporal": "2/2/2026 13:29:00",
+          "Dirección de correo electrónico": "diegonava1023@gmail.com",
+          "Ingrese el numero del contenedor": 10232001,
+          "Ingrese el número del pedido": 123456,
+          "Cargue las imagenes": "https://drive.google.com/open?id=1-eeO93u_j-APhhLuQSaFhDAKf8lo0sc7, https://drive.google.com/open?id=1FT5dVqfsZ3wCEruxUN9CqR4QYEXzyfoh"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Buscar la carpeta con el numContenedor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear carpeta con numContenedor": {
+      "main": [
+        [
+          {
+            "node": "Crear carpeta con el numPedido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar la carpeta con el numContenedor": {
+      "main": [
+        [
+          {
+            "node": "Si no existe la carpeta con el numContenedor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Crear carpeta con el numPedido1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar el numPedido1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Aggregate2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear carpeta con el numPedido": {
+      "main": [
+        [
+          {
+            "node": "Se separan las fotos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Download file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file1": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear carpeta con el numPedido1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Download file2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file2": {
+      "main": [
+        [
+          {
+            "node": "Upload file2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Si no existe la carpeta con el numContenedor": {
+      "main": [
+        [
+          {
+            "node": "Crear carpeta con numContenedor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar el numPedido1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se separan las fotos": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit Node3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Edit Node2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate2": {
+      "main": [
+        [
+          {
+            "node": "Edit Node1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Node1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Node2": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Node3": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Rechazar": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message2": {
+      "main": [
+        []
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "29fe0d01-2c53-4786-8c13-c2f99b3af025",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8055b989483fb4a91d4813239c3a7eaf236b9580073831d8060e0984113655a4"
+  },
+  "id": "7uK0ImoTJcCihhCzvqPoT",
+  "tags": []
+}
